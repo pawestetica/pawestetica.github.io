@@ -140,6 +140,11 @@ nav a.cta{background:var(--red);color:var(--white)}nav a.cta:hover{background:va
 .nsw .cu{display:block;background:conic-gradient(#EE7186,#F7E08F,#B5C9A8,#CCDCF1,#C9B6E4,#EE7186)}
 .nl .nsw input{position:absolute;inset:0;width:100%;height:100%;max-width:none;margin:0;padding:0;opacity:0;cursor:pointer;border-radius:50%}
 .nsw .cu:focus-within{outline:3px solid var(--ink);outline-offset:3px}
+.ndr{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .9rem;margin-top:1rem}.ndr[hidden]{display:none}
+.ndr>span{font-size:.85rem;font-weight:700;min-width:6.5em}
+.ndr .nsw{gap:.45rem}.ndr .nsw button{width:28px;height:28px}
+.ndr .nsw button.au{width:auto;height:auto;border-radius:99px;padding:.2em .85em;font-size:.78rem;font-weight:700;background:var(--white);border:1.5px solid var(--red)}
+.ndr .nsw button.au[aria-pressed=true]{background:var(--red);color:var(--white);box-shadow:none}
 .nch{display:flex;flex-wrap:wrap;gap:.5rem}
 .nch button{padding:.5em 1.1em;border-radius:99px;border:2px solid var(--red);background:none;font-weight:600;transition:background .2s,color .2s,transform .2s}
 .nch button[aria-pressed=true]{background:var(--red);color:var(--white);transform:rotate(-2deg) scale(1.05)}
@@ -244,7 +249,7 @@ footer p.f2{margin:0;font-weight:600}
 <div>
 <div class="nlt"><h3 class="nlh"><i>01</i>Forma<span id="v1"></span></h3><div class="nsh" id="n1" role="group" aria-label="Forma"></div></div>
 <div class="nlt"><h3 class="nlh"><i>02</i>Color de base<span id="v2"></span></h3><div class="nsw" id="n2" role="group" aria-label="Color de base"></div></div>
-<div class="nlt"><h3 class="nlh"><i>03</i>Decoraciones<span id="v3"></span></h3><div class="nch" id="n3" role="group" aria-label="Decoraciones"></div></div>
+<div class="nlt"><h3 class="nlh"><i>03</i>Decoraciones<span id="v3"></span></h3><div class="nch" id="n3" role="group" aria-label="Decoraciones"></div><div id="n3c"></div></div>
 <div class="nlt"><h3 class="nlh"><i>04</i>Acabado final<span id="v4"></span></h3><div class="nch" id="n4" role="group" aria-label="Acabado"></div><p class="nnote" id="nn"></p></div>
 <div class="nla"><button class="btn o" id="nrn" type="button">Sorpréndeme</button><button class="btn o" id="nrs" type="button">Empezar de nuevo</button></div>
 </div></div>
@@ -405,35 +410,41 @@ const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16)+.587*(n>>8&255
 const pal=h=>{const l=lum(h);return l>.66?{a:'#7B1E2B',p:'#EE7186',m:'#FFF3B0',f:l>.9?'#EE7186':'#FEFEFE'}:{a:'#FEFEFE',p:'#FEFEFE',m:'#F7D774',f:'#FEFEFE'}};
 const H=(x,y,s,f)=>`<path transform="translate(${x} ${y}) scale(${s})" fill="${f}" d="M0,8 C-12,0 -10,-9 -4,-9 C-2,-9 0,-7 0,-5 C0,-7 2,-9 4,-9 C10,-9 12,0 0,8Z"/>`;
 const Fl=(x,y,r,p,c)=>[0,72,144,216,288].map(a=>`<circle cx="${x}" cy="${y-r*.62}" r="${r*.42}" fill="${p}" transform="rotate(${a} ${x} ${y})"/>`).join('')+`<circle cx="${x}" cy="${y}" r="${r*.28}" fill="${c}"/>`;
-const St=(x,y,s,f)=>`<path transform="translate(${x} ${y}) scale(${s/100})" fill="${f}" stroke="#4f5868" stroke-opacity=".45" stroke-width="3" d="M0,-50 C3,-14 14,-3 50,0 C14,3 3,14 0,50 C-3,14 -14,3 -50,0 C-14,-3 -3,-14 0,-50Z"/>`;
+const St=(x,y,s,f,k)=>`<path transform="translate(${x} ${y}) scale(${s/100})" fill="${f}" stroke="${k||'#4f5868'}" stroke-opacity=".45" stroke-width="3" d="M0,-50 C3,-14 14,-3 50,0 C14,3 3,14 0,50 C-3,14 -14,3 -50,0 C-14,-3 -3,-14 0,-50Z"/>`;
+const mx=(h,t,k)=>{const n=parseInt(h.slice(1),16),m=parseInt(t.slice(1),16),f=(a,b)=>Math.round(a+(b-a)*k);return'#'+[16,8,0].map(z=>f(n>>z&255,m>>z&255).toString(16).padStart(2,'0')).join('')};
 const GC=['#E8453C','#2F7DE1','#2BB673','#F2B632','#9B51E0','#FF6FA5','#35C5D6'];
 const Gm=(x,y,s,t,f,r)=>{const sh=[`<circle r="1"/>`,`<path d="M0,-1.35 C.8,-.4 1,.1 1,.5 A1,1 0 0 1 -1,.5 C-1,.1 -.8,-.4 0,-1.35Z"/>`,`<path d="M0,-1.2 L1,0 L0,1.2 L-1,0Z"/>`,`<rect x="-.55" y="-1.25" width="1.1" height="2.5" rx=".2"/>`][t];return `<g transform="translate(${x} ${y}) rotate(${r||0}) scale(${s})"><g transform="translate(.12 .2)" fill="#000" opacity=".16">${sh}</g><g fill="${f}" stroke="#000" stroke-opacity=".22" stroke-width=".16">${sh}</g><circle cx="-.32" cy="-.3" r=".26" fill="#fff" opacity=".85" transform="scale(${t==3?.7:1})"/></g>`};
 const mkOk=()=>{const p=q('#nlpt');p.setAttribute('d',dOf(T[st.s][1]));if(!p.isPointInFill(new DOMPoint(120,140)))return()=>true;const i=(x,y)=>p.isPointInFill(new DOMPoint(x,y));return(x,y,m)=>{if(!i(x,y))return false;for(let a=0;a<8;a++){const r=a*Math.PI/4;if(!i(x+m*Math.cos(r),y+m*Math.sin(r)))return false}return true}};
 const fit=(ok,x,y,m)=>{for(const k of[1,.7,.4,0]){const X=120+(x-120)*k;if(ok(X,y,m))return[X,y]}return null};
 const polka=(ok,f)=>{let o='';for(let y=36,j=0;y<210;y+=21,j++)for(let x=120+(j%2?12:0)-24*5;x<200;x+=24)if(ok(x,y,9.5))o+=Dt(x.toFixed(1),y,4.2,f);return o};
-const stars=(ok)=>{let o='';[[112,150,30],[142,106,20],[98,98,13],[138,184,15]].forEach(a=>{const p=fit(ok,a[0],a[1],a[2]/2+3);if(p)o+=St(p[0],p[1],a[2],'url(#nlgd)')});[[96,176,1.7],[150,142,1.5],[120,72,1.6],[88,128,1.3]].forEach(a=>{const p=fit(ok,a[0],a[1],a[2]+3);if(p)o+=`<circle cx="${p[0]}" cy="${p[1]}" r="${a[2]}" fill="url(#nlgd)" stroke="#4f5868" stroke-opacity=".45" stroke-width=".4"/>`});return o};
+const stars=(ok,sk)=>{let o='';[[112,150,30],[142,106,20],[98,98,13],[138,184,15]].forEach(a=>{const p=fit(ok,a[0],a[1],a[2]/2+3);if(p)o+=St(p[0],p[1],a[2],'url(#nlgd)',sk)});[[96,176,1.7],[150,142,1.5],[120,72,1.6],[88,128,1.3]].forEach(a=>{const p=fit(ok,a[0],a[1],a[2]+3);if(p)o+=`<circle cx="${p[0]}" cy="${p[1]}" r="${a[2]}" fill="url(#nlgd)" stroke="${sk||'#4f5868'}" stroke-opacity=".45" stroke-width=".4"/>`});return o};
 const gems=(ok)=>{let o='',k=0;[[106,62,3.4,0],[134,84,3.2,1],[98,108,3.2,2],[126,126,4.2,0],[148,150,3,3],[104,160,3.6,1],[132,182,3,2],[92,188,2.6,0],[118,98,2.4,3]].forEach((a,i)=>{const p=fit(ok,a[0],a[1],a[2]*1.9+2);if(p)o+=Gm(p[0],p[1],a[2]*1.45,a[3],GC[(i*3+k++)%GC.length],(i*37)%50-25)});return o};
 const Dt=(x,y,r,f)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`;
 function glit(){let s=7,r=()=>(s=(s*16807)%2147483647)/2147483647,o='';for(let i=0;i<40;i++){o+=`<circle cx="${(72+r()*96).toFixed(1)}" cy="${(20+r()*195).toFixed(1)}" r="${(.8+r()*1.5).toFixed(1)}" fill="${['#fff','#F9C5D1','#F7E08F'][i%3]}" style="animation:ntw ${(2+r()*2).toFixed(1)}s ease-in-out ${(r()*2).toFixed(1)}s infinite"/>`}return o}
-const st={s:2,c:C[2][1],cn:C[2][0],d:new Set(),f:0};
+const st={s:2,c:C[2][1],cn:C[2][0],d:new Set(),f:0,dc:[null,null,null,null,null]};
 const mini=T.map((t,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<svg viewBox="62 8 116 216" aria-hidden="true"><path fill="${st.c}" stroke="#D43740" stroke-width="3" d="${setD(t[1])}"/></svg>${t[0]}`;b.onclick=()=>{st.s=i;draw()};q('#n1').appendChild(b);return b});
 setD(cur);
 const sw=C.map(c=>{const b=document.createElement('button');b.type='button';b.style.background=c[1];b.title=c[0];b.setAttribute('aria-label',c[0]);b.onclick=()=>{st.c=c[1];st.cn=c[0];draw()};q('#n2').appendChild(b);return b});
 const cu=document.createElement('span');cu.className='cu';cu.title='Elige tu color';cu.innerHTML='<input type="color" value="#F0B5BE" aria-label="Color personalizado">';q('#n2').appendChild(cu);
 cu.firstChild.oninput=e=>{st.c=e.target.value;st.cn='Personalizado';draw()};
 const mk=(id,arr,fn)=>arr.map((n,i)=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.onclick=()=>{fn(i);draw()};q(id).appendChild(b);return b});
+const DC=[...C,['Blanco','#FEFEFE']],DV=[null,...DC.map(c=>c[1])];
+const dr=[0,1,2,3,4].map(i=>{const r=document.createElement('div');r.className='ndr';r.hidden=true;r.innerHTML=`<span>${D[i]}</span><div class="nsw" role="group" aria-label="Color de ${D[i].toLowerCase()}"></div>`;const g=r.lastChild,bs=[[i==3?'Cromo':'Auto',null],...DC].map(c=>{const b=document.createElement('button');b.type='button';b.title=c[0];b.setAttribute('aria-label',c[0]);if(c[1])b.style.background=c[1];else{b.className='au';b.textContent=c[0]}b.onclick=()=>{st.dc[i]=c[1];draw()};g.appendChild(b);return b});q('#n3c').appendChild(r);return{r,bs}});
 const db=mk('#n3',D,i=>{st.d.has(i)?st.d.delete(i):st.d.add(i)}),fb=mk('#n4',F.map(f=>f[0]),i=>{st.f=i});
 function draw(){const c=pal(st.c),dn=[...st.d].sort(),x=[];
  morph(T[st.s][1]);q('#nlbs').setAttribute('fill',st.c);
  mini.forEach((b,i)=>{b.setAttribute('aria-pressed',i===st.s);b.firstChild.firstChild.setAttribute('fill',st.c)});
  sw.forEach((b,i)=>b.setAttribute('aria-pressed',C[i][1]===st.c&&st.cn===C[i][0]));cu.classList.toggle('on',st.cn==='Personalizado');
  db.forEach((b,i)=>b.setAttribute('aria-pressed',st.d.has(i)));fb.forEach((b,i)=>b.setAttribute('aria-pressed',i===st.f));
- if(st.d.has(0))x.push(`<path d="M40,0H200V92Q120,130 40,92Z" fill="${c.f}"/>`);
- if(st.d.has(1))x.push(H(103,165,1.2,c.a)+H(138,140,.95,c.a)+H(116,108,.7,c.a));
- if(st.d.has(2))x.push(Fl(138,172,10,c.p,c.m)+Fl(106,132,9,c.p,c.m)+Fl(132,100,7,c.p,c.m));
+ const u=st.dc,ac=u[1]||c.a;
+ dr.forEach((o,i)=>{o.r.hidden=!st.d.has(i);o.bs.forEach((b,j)=>b.setAttribute('aria-pressed',u[i]===DV[j]))});
+ {const h=u[3],g=h?[mx(h,'#ffffff',.85),mx(h,'#000000',.3),mx(h,'#ffffff',.7),mx(h,'#000000',.45),mx(h,'#ffffff',.6)]:['#fff','#8f99aa','#f6f8fb','#6f7a8c','#e9edf3'];document.querySelectorAll('#nlgd stop').forEach((e,i)=>e.setAttribute('stop-color',g[i]))}
+ if(st.d.has(0))x.push(`<path d="M40,0H200V92Q120,130 40,92Z" fill="${u[0]||c.f}"/>`);
+ if(st.d.has(1))x.push(H(103,165,1.2,ac)+H(138,140,.95,ac)+H(116,108,.7,ac));
+ if(st.d.has(2)){const fp=u[2]||c.p,fm=u[2]?(lum(u[2])>.7?'#F2B632':'#FFF3B0'):c.m;x.push(Fl(138,172,10,fp,fm)+Fl(106,132,9,fp,fm)+Fl(132,100,7,fp,fm))};
  const ok=mkOk();
- if(st.d.has(3))x.push(stars(ok));
- if(st.d.has(4))x.push(polka(ok,c.a));
+ if(st.d.has(3))x.push(stars(ok,u[3]?mx(u[3],'#000000',.5):null));
+ if(st.d.has(4))x.push(polka(ok,u[4]||c.a));
  if(st.d.has(5))x.push(glit());
  if(st.d.has(6))x.push(gems(ok));
  q('#nldec').innerHTML=x.join('');
@@ -442,8 +453,8 @@ function draw(){const c=pal(st.c),dn=[...st.d].sort(),x=[];
  const dt=dn.map(i=>D[i]).join(' + ')||'Sin decoración';
  q('#v1').textContent=T[st.s][0];q('#v2').textContent=st.cn;q('#v3').textContent=dn.length?dn.length+' elegidas':'Ninguna';q('#v4').textContent=F[st.f][0];q('#nn').textContent=F[st.f][1];
  q('#nlo').textContent=[T[st.s][0],st.cn,dt,F[st.f][0]].join(' · ');st.t=dt}
-q('#nrs').onclick=()=>{st.s=2;st.c=C[2][1];st.cn=C[2][0];st.d.clear();st.f=0;draw()};
-q('#nrn').onclick=()=>{const p=a=>Math.floor(Math.random()*a),c=C[p(C.length)];st.s=p(6);st.c=c[1];st.cn=c[0];st.d.clear();for(let i=p(3);i>0;i--)st.d.add(p(D.length));st.f=p(4);draw()};
+q('#nrs').onclick=()=>{st.s=2;st.c=C[2][1];st.cn=C[2][0];st.d.clear();st.dc.fill(null);st.f=0;draw()};
+q('#nrn').onclick=()=>{const p=a=>Math.floor(Math.random()*a),c=C[p(C.length)];st.s=p(6);st.c=c[1];st.cn=c[0];st.d.clear();st.dc.fill(null);for(let i=p(3);i>0;i--)st.d.add(p(D.length));st.f=p(4);draw()};
 draw();
 })();
 </script>
