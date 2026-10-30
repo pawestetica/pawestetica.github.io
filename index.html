@@ -377,7 +377,7 @@ const T=[['Cuadrada',[70,155,70,95,70,66,70,58,78,58,120,58,162,58,170,58,170,66
 ['Stiletto',[70,155,80,125,92,95,102,68,116,26,120,14,124,26,138,68,148,95,160,125,170,155,170,185]],
 ['Ovalada',[70,160,72,138,72,118,72,70,96,36,120,36,144,36,168,70,168,118,168,138,170,160,170,185]]];
 const C=[['Leche','#F6EDE4'],['Nude','#E8C4B0'],['Rosa palo','#F0B5BE'],['Chicle','#EE7186'],['Coral','#F4856E'],['Rojo','#D43740'],['Burdeos','#7B1E2B'],['Chocolate','#4A2B2B'],['Negro','#1F1A1C'],['Lila','#C9B6E4'],['Azul cielo','#CCDCF1'],['Salvia','#B5C9A8'],['Mantequilla','#F7E08F']];
-const D=['French','Corazones','Flores','Estrellas','Lunares','Purpurina'];
+const D=['French','Corazones','Flores','Estrellas','Lunares','Purpurina','Gemas'];
 const F=[['Brillo','Efecto gel, luminoso'],['Mate','Aterciopelado y suave'],['Perlado','Reflejos nacarados'],['Cromo','Espejo metalizado']];
 const sv=q('#nlsv'),R='x="60" y="0" width="120" height="232"';
 sv.innerHTML=`<defs><clipPath id="nlc"><path id="nlcp"/></clipPath>
@@ -387,22 +387,32 @@ sv.innerHTML=`<defs><clipPath id="nlc"><path id="nlcp"/></clipPath>
 <linearGradient id="nlgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
 <linearGradient id="nlpe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".35" stop-color="#F9C5D1" stop-opacity=".4"/><stop offset=".65" stop-color="#CCDCF1" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity=".5"/></linearGradient>
 <linearGradient id="nlcr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#9aa4b4"/><stop offset=".5" stop-color="#f4f6fa"/><stop offset=".75" stop-color="#7d8798"/><stop offset="1" stop-color="#e9edf3"/></linearGradient>
+<linearGradient id="nlgd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".28" stop-color="#8f99aa"/><stop offset=".5" stop-color="#f6f8fb"/><stop offset=".74" stop-color="#6f7a8c"/><stop offset="1" stop-color="#e9edf3"/></linearGradient>
 <filter id="nlb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4"/></filter>
 <filter id="nln"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/><feColorMatrix type="saturate" values="0"/></filter></defs>
 <g mask="url(#nlm)"><path d="M38,320 L38,190 C38,130 70,100 120,100 C170,100 202,130 202,190 L202,320Z" fill="url(#nlsk)"/></g>
 <path fill="none" stroke="#D9A08A" stroke-opacity=".6" stroke-width="3" stroke-linecap="round" d="M61,178 C61,226 90,236 120,236 C150,236 179,226 179,178"/>
 <path id="nlsh" fill="#7b1e2b" opacity=".18" filter="url(#nlb)" transform="translate(0 6)"/>
 <g clip-path="url(#nlc)" style="isolation:isolate"><rect id="nlbs" ${R} style="transition:fill .45s"/><g id="nlfin"></g><g id="nldec"></g></g>
-<path id="nlol" fill="none" stroke="#7b1e2b" stroke-opacity=".12"/>`;
-const setD=a=>{const d='M70,185'+[0,6,12,18].map(i=>'C'+a.slice(i,i+6).map(n=>n.toFixed(1)).join(' ')).join('')+'C170,205 148,217 120,217 C92,217 70,205 70,185Z';['nlcp','nlsh','nlol'].forEach(i=>q('#'+i).setAttribute('d',d));return d};
+<path id="nlol" fill="none" stroke="#7b1e2b" stroke-opacity=".12"/>
+<path id="nlpt" fill="#000" opacity="0" pointer-events="none"/>`;
+const dOf=a=>'M70,185'+[0,6,12,18].map(i=>'C'+a.slice(i,i+6).map(n=>n.toFixed(1)).join(' ')).join('')+'C170,205 148,217 120,217 C92,217 70,205 70,185Z';
+const setD=a=>{const d=dOf(a);['nlcp','nlsh','nlol'].forEach(i=>q('#'+i).setAttribute('d',d));return d};
 let cur=T[2][1],raf;
 function morph(b){const a=cur.slice(),t0=performance.now();cancelAnimationFrame(raf);if(rm){cur=b;setD(b);return}
  const f=n=>{const k=Math.min(1,(n-t0)/500)-1,e=1+2.2*k*k*k+1.2*k*k;cur=a.map((v,i)=>v+(b[i]-v)*e);setD(cur);if(k<0)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)}
 const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255};
-const pal=h=>{const l=lum(h);return l>.66?{a:'#D43740',p:'#EE7186',m:'#FFF3B0',f:l>.9?'#EE7186':'#FEFEFE'}:{a:'#FEFEFE',p:'#FEFEFE',m:'#F7D774',f:'#FEFEFE'}};
+const pal=h=>{const l=lum(h);return l>.66?{a:'#7B1E2B',p:'#EE7186',m:'#FFF3B0',f:l>.9?'#EE7186':'#FEFEFE'}:{a:'#FEFEFE',p:'#FEFEFE',m:'#F7D774',f:'#FEFEFE'}};
 const H=(x,y,s,f)=>`<path transform="translate(${x} ${y}) scale(${s})" fill="${f}" d="M0,8 C-12,0 -10,-9 -4,-9 C-2,-9 0,-7 0,-5 C0,-7 2,-9 4,-9 C10,-9 12,0 0,8Z"/>`;
 const Fl=(x,y,r,p,c)=>[0,72,144,216,288].map(a=>`<circle cx="${x}" cy="${y-r*.62}" r="${r*.42}" fill="${p}" transform="rotate(${a} ${x} ${y})"/>`).join('')+`<circle cx="${x}" cy="${y}" r="${r*.28}" fill="${c}"/>`;
-const St=(x,y,s,f)=>`<path transform="translate(${x} ${y}) scale(${s/100})" fill="${f}" d="M0,-50 L10,-10 L50,0 L10,10 L0,50 L-10,10 L-50,0 L-10,-10Z"/>`;
+const St=(x,y,s,f)=>`<path transform="translate(${x} ${y}) scale(${s/100})" fill="${f}" stroke="#4f5868" stroke-opacity=".45" stroke-width="3" d="M0,-50 C3,-14 14,-3 50,0 C14,3 3,14 0,50 C-3,14 -14,3 -50,0 C-14,-3 -3,-14 0,-50Z"/>`;
+const GC=['#E8453C','#2F7DE1','#2BB673','#F2B632','#9B51E0','#FF6FA5','#35C5D6'];
+const Gm=(x,y,s,t,f,r)=>{const sh=[`<circle r="1"/>`,`<path d="M0,-1.35 C.8,-.4 1,.1 1,.5 A1,1 0 0 1 -1,.5 C-1,.1 -.8,-.4 0,-1.35Z"/>`,`<path d="M0,-1.2 L1,0 L0,1.2 L-1,0Z"/>`,`<rect x="-.55" y="-1.25" width="1.1" height="2.5" rx=".2"/>`][t];return `<g transform="translate(${x} ${y}) rotate(${r||0}) scale(${s})"><g transform="translate(.12 .2)" fill="#000" opacity=".16">${sh}</g><g fill="${f}" stroke="#000" stroke-opacity=".22" stroke-width=".16">${sh}</g><circle cx="-.32" cy="-.3" r=".26" fill="#fff" opacity=".85" transform="scale(${t==3?.7:1})"/></g>`};
+const mkOk=()=>{const p=q('#nlpt');p.setAttribute('d',dOf(T[st.s][1]));if(!p.isPointInFill(new DOMPoint(120,140)))return()=>true;const i=(x,y)=>p.isPointInFill(new DOMPoint(x,y));return(x,y,m)=>{if(!i(x,y))return false;for(let a=0;a<8;a++){const r=a*Math.PI/4;if(!i(x+m*Math.cos(r),y+m*Math.sin(r)))return false}return true}};
+const fit=(ok,x,y,m)=>{for(const k of[1,.7,.4,0]){const X=120+(x-120)*k;if(ok(X,y,m))return[X,y]}return null};
+const polka=(ok,f)=>{let o='';for(let y=36,j=0;y<210;y+=21,j++)for(let x=120+(j%2?12:0)-24*5;x<200;x+=24)if(ok(x,y,9.5))o+=Dt(x.toFixed(1),y,4.2,f);return o};
+const stars=(ok)=>{let o='';[[112,150,30],[142,106,20],[98,98,13],[138,184,15]].forEach(a=>{const p=fit(ok,a[0],a[1],a[2]/2+3);if(p)o+=St(p[0],p[1],a[2],'url(#nlgd)')});[[96,176,1.7],[150,142,1.5],[120,72,1.6],[88,128,1.3]].forEach(a=>{const p=fit(ok,a[0],a[1],a[2]+3);if(p)o+=`<circle cx="${p[0]}" cy="${p[1]}" r="${a[2]}" fill="url(#nlgd)" stroke="#4f5868" stroke-opacity=".45" stroke-width=".4"/>`});return o};
+const gems=(ok)=>{let o='',k=0;[[106,62,3.4,0],[134,84,3.2,1],[98,108,3.2,2],[126,126,4.2,0],[148,150,3,3],[104,160,3.6,1],[132,182,3,2],[92,188,2.6,0],[118,98,2.4,3]].forEach((a,i)=>{const p=fit(ok,a[0],a[1],a[2]*1.9+2);if(p)o+=Gm(p[0],p[1],a[2]*1.45,a[3],GC[(i*3+k++)%GC.length],(i*37)%50-25)});return o};
 const Dt=(x,y,r,f)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`;
 function glit(){let s=7,r=()=>(s=(s*16807)%2147483647)/2147483647,o='';for(let i=0;i<40;i++){o+=`<circle cx="${(72+r()*96).toFixed(1)}" cy="${(20+r()*195).toFixed(1)}" r="${(.8+r()*1.5).toFixed(1)}" fill="${['#fff','#F9C5D1','#F7E08F'][i%3]}" style="animation:ntw ${(2+r()*2).toFixed(1)}s ease-in-out ${(r()*2).toFixed(1)}s infinite"/>`}return o}
 const st={s:2,c:C[2][1],cn:C[2][0],d:new Set(),f:0};
@@ -421,9 +431,11 @@ function draw(){const c=pal(st.c),dn=[...st.d].sort(),x=[];
  if(st.d.has(0))x.push(`<path d="M40,0H200V92Q120,130 40,92Z" fill="${c.f}"/>`);
  if(st.d.has(1))x.push(H(103,165,1.2,c.a)+H(138,140,.95,c.a)+H(116,108,.7,c.a));
  if(st.d.has(2))x.push(Fl(138,172,10,c.p,c.m)+Fl(106,132,9,c.p,c.m)+Fl(132,100,7,c.p,c.m));
- if(st.d.has(3))x.push(St(121,152,14,c.a)+St(146,112,10,c.a)+St(101,100,8,c.a));
- if(st.d.has(4))x.push([[92,185,3],[112,184,2.4],[146,186,3],[100,152,2.6],[142,160,2.2],[124,130,3],[104,112,2.2],[138,112,2.6],[120,88,2.4]].map(a=>Dt(a[0],a[1],a[2],c.a)).join(''));
+ const ok=mkOk();
+ if(st.d.has(3))x.push(stars(ok));
+ if(st.d.has(4))x.push(polka(ok,c.a));
  if(st.d.has(5))x.push(glit());
+ if(st.d.has(6))x.push(gems(ok));
  q('#nldec').innerHTML=x.join('');
  const g=`<path d="M91,128 C89,148 89,164 92,178" stroke="#fff" stroke-opacity=".7" stroke-width="6" stroke-linecap="round" fill="none"/>`,bd=`<g class="nbd"><rect x="60" y="0" width="26" height="232" fill="#fff" opacity=".35" transform="skewX(-15)"/></g>`;
  q('#nlfin').innerHTML=[`<rect ${R} fill="url(#nlgl)"/>`+g,`<rect ${R} fill="#fff" opacity=".14"/><rect ${R} filter="url(#nln)" opacity=".22" style="mix-blend-mode:soft-light"/>`,`<rect ${R} fill="url(#nlpe)"/>`+bd+g,`<rect ${R} fill="url(#nlcr)" style="mix-blend-mode:overlay"/>`+bd+g][st.f];
@@ -431,7 +443,7 @@ function draw(){const c=pal(st.c),dn=[...st.d].sort(),x=[];
  q('#v1').textContent=T[st.s][0];q('#v2').textContent=st.cn;q('#v3').textContent=dn.length?dn.length+' elegidas':'Ninguna';q('#v4').textContent=F[st.f][0];q('#nn').textContent=F[st.f][1];
  q('#nlo').textContent=[T[st.s][0],st.cn,dt,F[st.f][0]].join(' · ');st.t=dt}
 q('#nrs').onclick=()=>{st.s=2;st.c=C[2][1];st.cn=C[2][0];st.d.clear();st.f=0;draw()};
-q('#nrn').onclick=()=>{const p=a=>Math.floor(Math.random()*a),c=C[p(C.length)];st.s=p(6);st.c=c[1];st.cn=c[0];st.d.clear();for(let i=p(3);i>0;i--)st.d.add(p(6));st.f=p(4);draw()};
+q('#nrn').onclick=()=>{const p=a=>Math.floor(Math.random()*a),c=C[p(C.length)];st.s=p(6);st.c=c[1];st.cn=c[0];st.d.clear();for(let i=p(3);i>0;i--)st.d.add(p(D.length));st.f=p(4);draw()};
 draw();
 })();
 </script>
